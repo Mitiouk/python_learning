@@ -48,8 +48,8 @@ def read_word(_name):
 
 #парсер правил, если '^' - возвращаем ''
 def parser_rule(a):
-    if a=='^':
-        return ''
+    if a == '^':
+        return ""
     return a
 
 #Запись в файл
@@ -62,35 +62,43 @@ def out_to_file(_name,_str):
     f.write('\n')
     f.close()
 
+def markovAlgorifm(_p, _s):
+    _slovo = _s     #слово
+    _pravilo = _p   #правило
+    i = 0           # счётчик
+
+    while i < len(_pravilo):
+        pattern = parser_rule(_pravilo[i][0])
+        podstava = parser_rule(_pravilo[i][1])
+        final_flag = int(_pravilo[i][2])
+
+        res = _slovo.find(pattern)
+        if res != -1:
+            _slovo = _slovo.replace(pattern, podstava, 1)
+            i = 0  # Возвращаемся к началу алгоритма
+            if final_flag:
+                break
+        else:
+            i = i + 1
+    return _slovo  # Результат:
+
+#=============================================================
+#=============================================================
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi(__name__)
-
+    print('MARKOV RUNed')
 #Начало алгоритма:=====================================================
 
 #Чтение входных данных
 #slovo = '1001001'
-slovo = read_word('word.txt')
 #pravilo = [['a', 'b', 0]]
-pravilo = read_rule('rule_2.txt')
 
-i = 0  #счётчик
 
-while i < len(pravilo):
-    pattern = parser_rule(pravilo[i][0])
-    podstava = parser_rule(pravilo[i][1])
-    final_flag = int(pravilo[i][2])
 
-    res = slovo.find(pattern)
-    if res != -1:
-        slovo = slovo.replace(pattern,podstava,1)
-        print('Debug:','Slovo==>', slovo, 'Правило', i, pattern, '-->', podstava, 'Flag=', final_flag)
-        i = 0 #Возвращаемся к началу алгоритма
-        if final_flag:
-            break
-    else:
-        i = i + 1
+res = markovAlgorifm(read_rule('rule_2.txt'), read_word('word.txt'))
+print(res)
+out_to_file('result.txt', res)
 
-print(slovo) #Результат:
-out_to_file('result.txt', slovo)
 #===========================================================================
